@@ -94,6 +94,7 @@ class TasksController extends Controller
         // idの値でタスクを検索して取得
         $task = Task::findOrFail($id);
         
+        // 認証済みユーザ（閲覧者）がそのタスクの所有者である場合
         if (\Auth::id() === $task->user_id) {
             // タスク詳細ビューで表示
             return view('tasks.show', ['task' => $task,]);
@@ -114,6 +115,7 @@ class TasksController extends Controller
         //idの値でタスクを検索して取得
         $task = Task::FindOrFail($id);
         
+        // 認証済みユーザ（閲覧者）がそのタスクの所有者である場合
         if (\Auth::id() === $task->user_id) {
             // タスク編集ビューで表示
             return view('tasks.edit',['task' => $task,]);
@@ -141,11 +143,14 @@ class TasksController extends Controller
         // idの値でタスクを検索して取得
         $task = Task::FindOrFail($id);
         
-        // $taskが存在した場合に実行
-        // タスクを更新
-        $task->content = $request->content;     // サニタイズが必要
-        $task->status = $request->status;
-        $task->save();
+        // 認証済みユーザ（閲覧者）がそのタスクの所有者である場合
+        if (\Auth::id() === $task->user_id) {
+            // $taskが存在した場合に実行
+            // タスクを更新
+            $task->content = $request->content;     // サニタイズが必要か？
+            $task->status = $request->status;
+            $task->save();
+        }
         
         // トップページへリダイレクト
         return redirect('/');
@@ -163,6 +168,7 @@ class TasksController extends Controller
         // idの値でタスクを検索して取得
         $task = Task::FindOrFail($id);
         
+        // 認証済みユーザ（閲覧者）がそのタスクの所有者である場合
         if (\Auth::id() === $task->user_id) {
             // 該当データがあった場合に
             // タスクを削除
